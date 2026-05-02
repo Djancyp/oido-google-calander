@@ -2,6 +2,7 @@
   "name": "oido-google-calendar",
   "version": "1.0.0",
   "description": "List, create, search, and read Google Calendar events via OAuth2 using MCP server.",
+	"runtime": "make build",
   "mcpServers": {
     "oido-google-calendar": {
       "command": "${extensionPath}/oido-google-calendar-mcp",
