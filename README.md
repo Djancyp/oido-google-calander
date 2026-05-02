@@ -1,6 +1,6 @@
 # Oido Google Calendar MCP Extension
 
-List, create, search, and read Google Calendar events via OAuth2 using the Model Context Protocol.
+List, create, search, and read Google Calendar events via Service Account using the Model Context Protocol.
 
 ## Features
 
@@ -18,7 +18,7 @@ List, create, search, and read Google Calendar events via OAuth2 using the Model
    - macOS (Apple Silicon): `oido-google-calendar-darwin-arm64.zip`
 2. Open Qwen CLI → Plugins UI
 3. Upload the zip file
-4. Configure settings (client ID, secret, refresh token) in the plugin settings panel
+4. Configure settings (paste service account JSON key) in the plugin settings panel
 
 ### Option 2: Build from Source
 
@@ -42,38 +42,37 @@ unzip oido-google-calendar-linux-amd64.zip -d oido-google-calendar
 
 - Go 1.26+
 - Google Cloud project with Calendar API enabled
-- OAuth2 credentials (client ID + secret) and refresh token
+- Service account with JSON key
 
 ## Setup
 
-### 1. Enable Google Calendar API
+### 1. Create a Service Account
 
 1. Go to [Google Cloud Console](https://console.cloud.google.com/)
 2. Create a new project or select existing
 3. Enable the **Google Calendar API**
-4. Go to **Credentials** → **Create Credentials** → **OAuth client ID**
-5. Choose **Desktop app** as application type
-6. Download the JSON credentials file
+4. Go to **IAM & Admin** → **Service Accounts** → **Create Service Account**
+5. Name it "Oido Calendar" → **Create and Continue**
+6. Skip granting permissions (not needed) → **Done**
+7. Click the service account → **Keys** → **Add Key** → **Create New Key**
+8. Choose **JSON** → **Create** → the JSON key file downloads automatically
 
-### 2. Get a Refresh Token
+### 2. Share Your Calendar with the Service Account
 
-Use the downloaded credentials to obtain a refresh token (requires a one-time OAuth2 flow):
-
-```bash
-# Install Google OAuth2 CLI tool or use a script
-# The refresh token grants long-lived access to the Calendar API
-```
+1. Copy `client_email` from the downloaded JSON key (looks like `oido-calendar@your-project.iam.gserviceaccount.com`)
+2. Open [Google Calendar](https://calendar.google.com/)
+3. Find the calendar you want to access → click **⋮** → **Settings and sharing**
+4. Under **Share with specific people**, add the service account email
+5. Set permission to **Make changes to events** (for full access)
 
 ### 3. Configure Extension
 
-Set the following environment variables (or configure via plugin settings):
+Open the JSON key file, copy the **entire content**, and paste it as the `CALENDAR_SERVICE_ACCOUNT_JSON` setting. Also set:
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `CALENDAR_CLIENT_ID` | OAuth2 client ID | *(required)* |
-| `CALENDAR_CLIENT_SECRET` | OAuth2 client secret | *(required)* |
-| `CALENDAR_REFRESH_TOKEN` | OAuth2 refresh token | *(required)* |
-| `CALENDAR_ID` | Calendar ID to use | `primary` |
+| `CALENDAR_SERVICE_ACCOUNT_JSON` | Full content of the service account JSON key | *(required)* |
+| `CALENDAR_ID` | Calendar ID (use your email for your main calendar) | `primary` |
 | `CALENDAR_MAX_RESULTS` | Max events per list/search | `20` |
 | `CALENDAR_TIMEZONE` | Timezone for events | *(system timezone)* |
 
@@ -113,7 +112,7 @@ Search events by query string matching title, description, or location.
 │             │                │                             │
 │             │                │  ┌───────────────────────┐  │
 │             │                │  │ Calendar API Client    │──► Google Calendar API
-│             │                │  │ (OAuth2)              │  │
+│             │                │  │ (Service Account)              │  │
 │             │                │  └───────────────────────┘  │
 └─────────────┘                └─────────────────────────────┘
 ```

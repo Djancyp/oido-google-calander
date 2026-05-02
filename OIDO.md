@@ -1,6 +1,6 @@
 # Oido Google Calendar Extension
 
-List, create, search, and read Google Calendar events via OAuth2. This extension provides MCP tools for calendar management.
+List, create, search, and read Google Calendar events via Service Account. This extension provides MCP tools for calendar management.
 
 ## Available Tools
 
@@ -84,13 +84,12 @@ End:      2026-05-03T15:00:00Z
 
 ## Notes
 
-- **OAuth2 authentication**: Uses Google Calendar API v3 with OAuth2 refresh token
-- **Calendar ID**: Defaults to "primary" (user's main calendar); can use any accessible calendar ID
+- **Service Account authentication**: Uses Google Calendar API v3 with a service account JWT key (no browser OAuth flow needed)
+- **Calendar ID**: Defaults to "primary" (service account's own calendar); use a shared calendar email or ID to access other calendars
+- **Must share your calendar**: For the service account to access **your** Google Calendar, share your calendar with the service account email (found in the JSON key under `client_email`)
 - **Time format**: All times are in RFC3339 format
 - **Event IDs**: Use the event ID from list_events/search_events when calling get_event
-- **Environment variables for authentication**:
-  - `CALENDAR_CLIENT_ID` (required): OAuth2 client ID from Google Cloud Console
-  - `CALENDAR_CLIENT_SECRET` (required): OAuth2 client secret from Google Cloud Console
-  - `CALENDAR_REFRESH_TOKEN` (required): OAuth2 refresh token for long-lived access
+- **Environment variable for authentication**:
+  - `CALENDAR_SERVICE_ACCOUNT_JSON` (required): Paste the entire content of the service account JSON key
 - **Limits**: Default 20 events for list/search
-- **Creating events**: Requires a Google Cloud project with Calendar API enabled and OAuth2 credentials configured
+- **Creating events**: Requires a Google Cloud project with Calendar API enabled and a service account created

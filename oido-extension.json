@@ -1,20 +1,48 @@
 {
   "name": "oido-google-calendar",
   "version": "1.0.0",
-  "description": "List, create, search, and read Google Calendar events via OAuth2 using MCP server.",
-	"runtime": "make build",
+  "description": "List, create, search, and read Google Calendar events via Service Account using MCP server.",
   "mcpServers": {
     "oido-google-calendar": {
       "command": "${extensionPath}/oido-google-calendar-mcp",
       "args": [],
       "env": {
-        "CALENDAR_CLIENT_ID": "${CALENDAR_CLIENT_ID}",
-        "CALENDAR_CLIENT_SECRET": "${CALENDAR_CLIENT_SECRET}",
-        "CALENDAR_REFRESH_TOKEN": "${CALENDAR_REFRESH_TOKEN}",
+        "CALENDAR_SERVICE_ACCOUNT_JSON": "${CALENDAR_SERVICE_ACCOUNT_JSON}",
         "CALENDAR_ID": "${CALENDAR_ID}",
         "CALENDAR_MAX_RESULTS": "${CALENDAR_MAX_RESULTS}",
         "CALENDAR_TIMEZONE": "${CALENDAR_TIMEZONE}"
       }
+    }
+  },
+  "contextFileName": "OIDO.md",
+  "excludeTools": [],
+  "settings": [
+    {
+      "name": "CALENDAR_SERVICE_ACCOUNT_JSON",
+      "description": "Full content of the Google Cloud service account JSON key file",
+      "defaultValue": "",
+      "type": "string"
+    },
+    {
+      "name": "CALENDAR_ID",
+      "description": "Calendar ID to use (default: 'primary' for main calendar). For shared calendars, use the calendar email or ID.",
+      "defaultValue": "primary",
+      "type": "string"
+    },
+    {
+      "name": "CALENDAR_MAX_RESULTS",
+      "description": "Maximum number of events to return per list/search (default: 20)",
+      "defaultValue": "20",
+      "type": "string"
+    },
+    {
+      "name": "CALENDAR_TIMEZONE",
+      "description": "Timezone for event display (e.g. America/New_York, default: system timezone)",
+      "defaultValue": "",
+      "type": "string"
+    }
+  ]
+}
     }
   },
   "contextFileName": "OIDO.md",

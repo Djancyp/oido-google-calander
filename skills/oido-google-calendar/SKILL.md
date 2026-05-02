@@ -1,13 +1,13 @@
 ---
 name: oido-google-calendar
-description: List, create, search, and read Google Calendar events via OAuth2
+description: List, create, search, and read Google Calendar events via Service Account
 ---
 
 # Oido Google Calendar Extension
 
 ## Overview
 
-The Oido Google Calendar extension provides tools to list, create, search, and read events on Google Calendar via the Calendar API v3 with OAuth2 authentication. Use these tools when users ask about their schedule, want to create meetings, or need to find specific events.
+The Oido Google Calendar extension provides tools to list, create, search, and read events on Google Calendar via the Calendar API v3 with a service account. Use these tools when users ask about their schedule, want to create meetings, or need to find specific events.
 
 ## Available Tools
 
@@ -184,14 +184,15 @@ ghi345jkl678                           | Sprint Retrospective         | 2026-05-
 
 ## Limitations
 
-- **OAuth2 only**: Requires OAuth2 credentials (not service account by default)
+- **Service Account only**: Requires a Google Cloud service account JSON key (no browser OAuth flow)
+- **Must share calendar**: Add the service account email to your calendar's share settings
 - **Single calendar**: Reads from one calendar at a time (defaults to primary)
 - **No recurrence expansion**: Recurring events may appear as single instances
 - **No attendee management**: Creates events without adding attendees
 - **No reminders**: Does not set event reminders
 - **No color/label customization**: Creates events with default settings
-- Requires environment variables: CALENDAR_CLIENT_ID, CALENDAR_CLIENT_SECRET, CALENDAR_REFRESH_TOKEN
-- **Google Cloud setup required**: Requires enabling Calendar API and creating OAuth2 credentials
+- Requires environment variable: CALENDAR_SERVICE_ACCOUNT_JSON (paste the entire JSON key content)
+- **Google Cloud setup required**: Requires enabling Calendar API and creating a service account
 - **RFC3339 time format**: All times must be in RFC3339 format
 
 ## Related Commands

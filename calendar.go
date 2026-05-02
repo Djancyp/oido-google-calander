@@ -7,19 +7,16 @@ import (
 	"strconv"
 	"time"
 
-	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
 	"google.golang.org/api/calendar/v3"
 	"google.golang.org/api/option"
 )
 
 type CalendarSettings struct {
-	ClientID     string
-	ClientSecret string
-	RefreshToken string
-	CalendarID   string
-	MaxResults   int64
-	Timezone     string
+	ServiceAccountJSON string
+	CalendarID         string
+	MaxResults         int64
+	Timezone           string
 }
 
 type EventSummary struct {
@@ -52,9 +49,7 @@ func DefaultCalendarSettings() *CalendarSettings {
 func parseCalendarSettings() (*CalendarSettings, error) {
 	settings := DefaultCalendarSettings()
 
-	settings.ClientID = os.Getenv("CALENDAR_CLIENT_ID")
-	settings.ClientSecret = os.Getenv("CALENDAR_CLIENT_SECRET")
-	settings.RefreshToken = os.Getenv("CALENDAR_REFRESH_TOKEN")
+	settings.ServiceAccountJSON = os.Getenv("CALENDAR_SERVICE_ACCOUNT_JSON")
 
 	if id := os.Getenv("CALENDAR_ID"); id != "" {
 		settings.CalendarID = id
@@ -70,8 +65,8 @@ func parseCalendarSettings() (*CalendarSettings, error) {
 		settings.Timezone = tz
 	}
 
-	if settings.ClientID == "" || settings.ClientSecret == "" || settings.RefreshToken == "" {
-		return nil, fmt.Errorf("missing required env vars: CALENDAR_CLIENT_ID, CALENDAR_CLIENT_SECRET, and CALENDAR_REFRESH_TOKEN must be set")
+	if settings.ServiceAccountJSON == "" {
+		return nil, fmt.Errorf("missing required env var: CALENDAR_SERVICE_ACCOUNT_JSON must be set (paste the entire service account JSON key)")
 	}
 
 	return settings, nil
@@ -90,18 +85,12 @@ func NewCalendarClient() (*CalendarClient, error) {
 }
 
 func (c *CalendarClient) getService(ctx context.Context) (*calendar.Service, error) {
-	config := &oauth2.Config{
-		ClientID:     c.settings.ClientID,
-		ClientSecret: c.settings.ClientSecret,
-		Endpoint:     google.Endpoint,
-		Scopes:       []string{calendar.CalendarScope},
+	conf, err := google.JWTConfigFromJSON([]byte(c.settings.ServiceAccountJSON), calendar.CalendarScope)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse service account JSON: %w", err)
 	}
 
-	token := &oauth2.Token{
-		RefreshToken: c.settings.RefreshToken,
-	}
-
-	client := config.Client(ctx, token)
+	client := conf.Client(ctx)
 
 	srv, err := calendar.NewService(ctx, option.WithHTTPClient(client))
 	if err != nil {
