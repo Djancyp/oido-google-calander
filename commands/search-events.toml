@@ -1,0 +1,11 @@
+name = "search-events"
+description = "Search events by query string matching title, description, or location."
+
+prompt = """
+Search for events matching the query "{{query}}" using the search_events tool.
+Return at most {{max_results}} results.
+"""
+
+[parameters]
+query = { type = "string", description = "Search term to match in event title, description, or location", required = true }
+max_results = { type = "number", description = "Maximum number of results to return (default: 20)", default = 20 }

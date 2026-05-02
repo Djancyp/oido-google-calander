@@ -1,0 +1,19 @@
+name = "create-event"
+description = "Create a new event on the calendar."
+
+prompt = """
+Create a new calendar event using the create_event tool.
+
+Summary: {{summary}}
+Start: {{start_time}}
+End: {{end_time}}
+Description: {{description}}
+Location: {{location}}
+"""
+
+[parameters]
+summary = { type = "string", description = "Title of the event", required = true }
+start_time = { type = "string", description = "Start time in RFC3339 format (e.g. 2026-05-15T09:00:00Z)", required = true }
+end_time = { type = "string", description = "End time in RFC3339 format (e.g. 2026-05-15T10:00:00Z)", required = true }
+description = { type = "string", description = "Description or notes for the event" }
+location = { type = "string", description = "Location of the event" }

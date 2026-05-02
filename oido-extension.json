@@ -1,0 +1,59 @@
+{
+  "name": "oido-google-calendar",
+  "version": "1.0.0",
+  "description": "List, create, search, and read Google Calendar events via OAuth2 using MCP server.",
+  "mcpServers": {
+    "oido-google-calendar": {
+      "command": "${extensionPath}/oido-google-calendar-mcp",
+      "args": [],
+      "env": {
+        "CALENDAR_CLIENT_ID": "${CALENDAR_CLIENT_ID}",
+        "CALENDAR_CLIENT_SECRET": "${CALENDAR_CLIENT_SECRET}",
+        "CALENDAR_REFRESH_TOKEN": "${CALENDAR_REFRESH_TOKEN}",
+        "CALENDAR_ID": "${CALENDAR_ID}",
+        "CALENDAR_MAX_RESULTS": "${CALENDAR_MAX_RESULTS}",
+        "CALENDAR_TIMEZONE": "${CALENDAR_TIMEZONE}"
+      }
+    }
+  },
+  "contextFileName": "OIDO.md",
+  "excludeTools": [],
+  "settings": [
+    {
+      "name": "CALENDAR_CLIENT_ID",
+      "description": "OAuth2 client ID from Google Cloud Console",
+      "defaultValue": "",
+      "type": "string"
+    },
+    {
+      "name": "CALENDAR_CLIENT_SECRET",
+      "description": "OAuth2 client secret from Google Cloud Console",
+      "defaultValue": "",
+      "type": "string"
+    },
+    {
+      "name": "CALENDAR_REFRESH_TOKEN",
+      "description": "OAuth2 refresh token for long-lived access to Calendar API",
+      "defaultValue": "",
+      "type": "string"
+    },
+    {
+      "name": "CALENDAR_ID",
+      "description": "Calendar ID to use (default: 'primary' for main calendar)",
+      "defaultValue": "primary",
+      "type": "string"
+    },
+    {
+      "name": "CALENDAR_MAX_RESULTS",
+      "description": "Maximum number of events to return per list/search (default: 20)",
+      "defaultValue": "20",
+      "type": "string"
+    },
+    {
+      "name": "CALENDAR_TIMEZONE",
+      "description": "Timezone for event display (e.g. America/New_York, default: system timezone)",
+      "defaultValue": "",
+      "type": "string"
+    }
+  ]
+}
