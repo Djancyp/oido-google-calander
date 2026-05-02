@@ -2,7 +2,7 @@ name = "get-event"
 description = "Get full details of a specific event by its ID."
 
 prompt = """
-Get full details of event with ID {{event_id}} using the get_event tool.
+Get full details of event with ID {{event_id}} using the g_calendar_get_event tool.
 Show summary, description, start, end, location, status, creator, and attendees.
 """
 

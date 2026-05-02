@@ -11,7 +11,7 @@ The Oido Google Calendar extension provides tools to list, create, search, and r
 
 ## Available Tools
 
-### `list_events`
+### `g_calendar_list_events`
 
 List upcoming events from the calendar.
 
@@ -27,13 +27,13 @@ List upcoming events from the calendar.
 **Example Usage:**
 ```
 User: "Show me my next 10 events"
-→ Call list_events with max_results: 10
+→ Call g_calendar_list_events with max_results: 10
 ```
 
 **Response Format:**
 Returns formatted table with ID, Summary, Start, End.
 
-### `get_event`
+### `g_calendar_get_event`
 
 Get full details of a specific event by its ID.
 
@@ -43,18 +43,18 @@ Get full details of a specific event by its ID.
 **When to use:**
 - User asks for details of a specific event
 - User wants to see full event information
-- User references an event ID from a previous list_events result
+- User references an event ID from a previous g_calendar_list_events result
 
 **Example Usage:**
 ```
 User: "Show me details for event abc123"
-→ Call get_event with event_id: "abc123"
+→ Call g_calendar_get_event with event_id: "abc123"
 ```
 
 **Response Format:**
 Returns Summary, Description, Start, End, Location, Status, Creator, Attendees.
 
-### `create_event`
+### `g_calendar_create_event`
 
 Create a new event on the calendar.
 
@@ -73,13 +73,13 @@ Create a new event on the calendar.
 **Example Usage:**
 ```
 User: "Create a meeting tomorrow at 2pm for 1 hour called 'Sprint Review'"
-→ Call create_event with summary: "Sprint Review", start_time: "2026-05-03T14:00:00Z", end_time: "2026-05-03T15:00:00Z"
+→ Call g_calendar_create_event with summary: "Sprint Review", start_time: "2026-05-03T14:00:00Z", end_time: "2026-05-03T15:00:00Z"
 ```
 
 **Response Format:**
 Returns confirmation with event ID, summary, start, and end times.
 
-### `search_events`
+### `g_calendar_search_events`
 
 Search events by query string matching title, description, or location.
 
@@ -95,7 +95,7 @@ Search events by query string matching title, description, or location.
 **Example Usage:**
 ```
 User: "Find events about 'meeting'"
-→ Call search_events with query: "meeting"
+→ Call g_calendar_search_events with query: "meeting"
 ```
 
 **Response Format:**
@@ -103,8 +103,8 @@ Returns formatted table with ID, Summary, Start, End for matching events.
 
 ## Best Practices
 
-1. **List before reading**: Use list_events first to show available events, then get_event for details
-2. **ID-based access**: Always use the event ID from list_events/search_events when calling get_event
+1. **List before reading**: Use g_calendar_list_events first to show available events, then g_calendar_get_event for details
+2. **ID-based access**: Always use the event ID from g_calendar_list_events/g_calendar_search_events when calling g_calendar_get_event
 3. **RFC3339 times**: Always use RFC3339 format for time parameters
 4. **Default limits**: Respect max_results limits (default 20 for list/search)
 5. **Context**: Mention results are from the user's primary calendar unless otherwise specified
@@ -117,7 +117,7 @@ Returns formatted table with ID, Summary, Start, End for matching events.
 User: "What's on my calendar?"
 
 Assistant: Let me check your upcoming events.
-[Calls list_events with max_results: 20]
+[Calls g_calendar_list_events with max_results: 20]
 
 Upcoming Events (3):
 
@@ -136,7 +136,7 @@ Would you like details on any of these?
 User: "Show me details for event abc123def456"
 
 Assistant: Let me fetch that event's details.
-[Calls get_event with event_id: "abc123def456"]
+[Calls g_calendar_get_event with event_id: "abc123def456"]
 
 Summary:     Q2 Planning Meeting
 ID:          abc123def456
@@ -156,7 +156,7 @@ Quarterly planning session. Please review the agenda beforehand.
 User: "Schedule a lunch meeting with Alice for tomorrow at 12pm lasting 1 hour"
 
 Assistant: I'll create that event for you.
-[Calls create_event with summary: "Lunch with Alice", start_time: "...T12:00:00Z", end_time: "...T13:00:00Z"]
+[Calls g_calendar_create_event with summary: "Lunch with Alice", start_time: "...T12:00:00Z", end_time: "...T13:00:00Z"]
 
 Event created successfully:
 
@@ -172,7 +172,7 @@ End:         2026-05-03T13:00:00Z
 User: "Find events about 'sprint'"
 
 Assistant: Let me search your calendar for "sprint".
-[Calls search_events with query: "sprint"]
+[Calls g_calendar_search_events with query: "sprint"]
 
 Search Results for "sprint" (2):
 

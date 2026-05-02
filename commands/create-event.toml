@@ -2,7 +2,7 @@ name = "create-event"
 description = "Create a new event on the calendar."
 
 prompt = """
-Create a new calendar event using the create_event tool.
+Create a new calendar event using the g_calendar_create_event tool.
 
 Summary: {{summary}}
 Start: {{start_time}}

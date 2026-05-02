@@ -2,9 +2,11 @@ package main
 
 import (
 	"context"
+	"encoding/base64"
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
 	"golang.org/x/oauth2/google"
@@ -51,6 +53,17 @@ func parseCalendarSettings() (*CalendarSettings, error) {
 
 	settings.ServiceAccountJSON = os.Getenv("CALENDAR_SERVICE_ACCOUNT_JSON")
 
+	if settings.ServiceAccountJSON == "" {
+		b64 := os.Getenv("CALENDAR_SERVICE_ACCOUNT_B64")
+		if b64 != "" {
+			decoded, err := base64.StdEncoding.DecodeString(b64)
+			if err != nil {
+				return nil, fmt.Errorf("failed to decode CALENDAR_SERVICE_ACCOUNT_B64: %w (use standard base64 encoding)", err)
+			}
+			settings.ServiceAccountJSON = string(decoded)
+		}
+	}
+
 	if id := os.Getenv("CALENDAR_ID"); id != "" {
 		settings.CalendarID = id
 	}
@@ -66,7 +79,7 @@ func parseCalendarSettings() (*CalendarSettings, error) {
 	}
 
 	if settings.ServiceAccountJSON == "" {
-		return nil, fmt.Errorf("missing required env var: CALENDAR_SERVICE_ACCOUNT_JSON must be set (paste the entire service account JSON key)")
+		return nil, fmt.Errorf("missing required env var: set CALENDAR_SERVICE_ACCOUNT_JSON (raw JSON) or CALENDAR_SERVICE_ACCOUNT_B64 (base64-encoded JSON)")
 	}
 
 	return settings, nil
@@ -85,9 +98,26 @@ func NewCalendarClient() (*CalendarClient, error) {
 }
 
 func (c *CalendarClient) getService(ctx context.Context) (*calendar.Service, error) {
-	conf, err := google.JWTConfigFromJSON([]byte(c.settings.ServiceAccountJSON), calendar.CalendarScope)
+	input := strings.TrimSpace(c.settings.ServiceAccountJSON)
+	raw := []byte(input)
+
+	conf, err := google.JWTConfigFromJSON(raw, calendar.CalendarScope)
 	if err != nil {
-		return nil, fmt.Errorf("failed to parse service account JSON: %w", err)
+		preview := string(raw)
+		if len(preview) > 120 {
+			preview = preview[:120] + "..."
+		}
+		hexPreview := ""
+		for i, b := range raw {
+			if i >= 30 {
+				break
+			}
+			hexPreview += fmt.Sprintf("%02x ", b)
+		}
+		detail := fmt.Sprintf(
+			"error: %v\nfirst 30 bytes (hex): %s\nstring preview: %s\n\nTip: use CALENDAR_SERVICE_ACCOUNT_B64 instead of CALENDAR_SERVICE_ACCOUNT_JSON to avoid env var escaping issues.\n  base64 -w0 /path/to/key.json  → paste result into CALENDAR_SERVICE_ACCOUNT_B64",
+			err, hexPreview, preview)
+		return nil, fmt.Errorf("%s", detail)
 	}
 
 	client := conf.Client(ctx)

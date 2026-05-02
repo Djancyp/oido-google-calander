@@ -9,6 +9,7 @@
       "args": [],
       "env": {
         "CALENDAR_SERVICE_ACCOUNT_JSON": "${CALENDAR_SERVICE_ACCOUNT_JSON}",
+        "CALENDAR_SERVICE_ACCOUNT_B64": "${CALENDAR_SERVICE_ACCOUNT_B64}",
         "CALENDAR_ID": "${CALENDAR_ID}",
         "CALENDAR_MAX_RESULTS": "${CALENDAR_MAX_RESULTS}",
         "CALENDAR_TIMEZONE": "${CALENDAR_TIMEZONE}"
@@ -20,7 +21,13 @@
   "settings": [
     {
       "name": "CALENDAR_SERVICE_ACCOUNT_JSON",
-      "description": "Full content of the Google Cloud service account JSON key file",
+      "description": "Full content of the Google Cloud service account JSON key file (raw JSON, may have newlines)",
+      "defaultValue": "",
+      "type": "string"
+    },
+    {
+      "name": "CALENDAR_SERVICE_ACCOUNT_B64",
+      "description": "Base64-encoded service account JSON (alternative to CALENDAR_SERVICE_ACCOUNT_JSON, avoids newline issues)",
       "defaultValue": "",
       "type": "string"
     },

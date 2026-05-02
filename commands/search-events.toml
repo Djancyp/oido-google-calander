@@ -2,7 +2,7 @@ name = "search-events"
 description = "Search events by query string matching title, description, or location."
 
 prompt = """
-Search for events matching the query "{{query}}" using the search_events tool.
+Search for events matching the query "{{query}}" using the g_calendar_search_events tool.
 Return at most {{max_results}} results.
 """
 

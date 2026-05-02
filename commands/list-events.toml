@@ -2,7 +2,7 @@ name = "list-events"
 description = "List upcoming events from the calendar."
 
 prompt = """
-List upcoming events from the calendar using the list_events tool.
+List upcoming events from the calendar using the g_calendar_list_events tool.
 Show the event ID, summary, start time, and end time for each event.
 """
 

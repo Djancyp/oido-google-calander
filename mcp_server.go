@@ -52,22 +52,22 @@ func RunMCPServer() {
 	}, nil)
 
 	mcp.AddTool(server, &mcp.Tool{
-		Name:        "list_events",
+		Name:        "g_calendar_list_events",
 		Description: "List upcoming events from the calendar. Returns event ID, summary, start time, end time, and location.",
 	}, handler.HandleListEvents)
 
 	mcp.AddTool(server, &mcp.Tool{
-		Name:        "get_event",
+		Name:        "g_calendar_get_event",
 		Description: "Get full details of a specific event by its ID. Returns summary, description, time, location, status, creator, and attendees.",
 	}, handler.HandleGetEvent)
 
 	mcp.AddTool(server, &mcp.Tool{
-		Name:        "create_event",
+		Name:        "g_calendar_create_event",
 		Description: "Create a new event on the calendar. Requires summary, start_time, and end_time.",
 	}, handler.HandleCreateEvent)
 
 	mcp.AddTool(server, &mcp.Tool{
-		Name:        "search_events",
+		Name:        "g_calendar_search_events",
 		Description: "Search events by query string matching title, description, or location. Returns matching events with ID, summary, and time.",
 	}, handler.HandleSearchEvents)
 

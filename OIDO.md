@@ -4,7 +4,7 @@ List, create, search, and read Google Calendar events via Service Account. This 
 
 ## Available Tools
 
-### `list_events`
+### `g_calendar_list_events`
 List upcoming events from the calendar.
 
 **Parameters:**
@@ -13,7 +13,7 @@ List upcoming events from the calendar.
 
 **Returns:** Formatted table with ID, Summary, Start, End.
 
-### `get_event`
+### `g_calendar_get_event`
 Get full details of a specific event by its ID.
 
 **Parameters:**
@@ -21,7 +21,7 @@ Get full details of a specific event by its ID.
 
 **Returns:** Summary, Description, Start, End, Location, Status, Creator, Attendees.
 
-### `create_event`
+### `g_calendar_create_event`
 Create a new event on the calendar.
 
 **Parameters:**
@@ -33,7 +33,7 @@ Create a new event on the calendar.
 
 **Returns:** Confirmation with event ID, summary, and times.
 
-### `search_events`
+### `g_calendar_search_events`
 Search events by query string matching title, description, or location.
 
 **Parameters:**
@@ -49,7 +49,7 @@ User: What's on my calendar this week?
 
 Assistant: Let me check your upcoming events.
 
-[Uses list_events tool]
+[Uses g_calendar_list_events tool]
 
 Upcoming Events (3):
 
@@ -65,7 +65,7 @@ User: Create a meeting tomorrow at 2pm for 1 hour called 'Sprint Review'
 
 Assistant: I'll create that event for you.
 
-[Uses create_event tool]
+[Uses g_calendar_create_event tool]
 
 Event created successfully:
 
@@ -88,8 +88,9 @@ End:      2026-05-03T15:00:00Z
 - **Calendar ID**: Defaults to "primary" (service account's own calendar); use a shared calendar email or ID to access other calendars
 - **Must share your calendar**: For the service account to access **your** Google Calendar, share your calendar with the service account email (found in the JSON key under `client_email`)
 - **Time format**: All times are in RFC3339 format
-- **Event IDs**: Use the event ID from list_events/search_events when calling get_event
-- **Environment variable for authentication**:
-  - `CALENDAR_SERVICE_ACCOUNT_JSON` (required): Paste the entire content of the service account JSON key
+- **Event IDs**: Use the event ID from g_calendar_list_events/g_calendar_search_events when calling g_calendar_get_event
+- **Environment variable for authentication** (set one of):
+  - `CALENDAR_SERVICE_ACCOUNT_JSON`: Paste the entire service account JSON key (raw)
+  - `CALENDAR_SERVICE_ACCOUNT_B64`: Base64-encoded version of the JSON (avoids newline issues in env vars)
 - **Limits**: Default 20 events for list/search
 - **Creating events**: Requires a Google Cloud project with Calendar API enabled and a service account created

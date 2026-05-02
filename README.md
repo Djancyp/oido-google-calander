@@ -67,11 +67,18 @@ unzip oido-google-calendar-linux-amd64.zip -d oido-google-calendar
 
 ### 3. Configure Extension
 
-Open the JSON key file, copy the **entire content**, and paste it as the `CALENDAR_SERVICE_ACCOUNT_JSON` setting. Also set:
+Open the JSON key file, copy the **entire content**, and paste it as `CALENDAR_SERVICE_ACCOUNT_JSON`.  
+
+**If newlines cause issues**, use base64 instead:
+```bash
+base64 -w0 /path/to/service-account.json
+# Copy the output → paste as CALENDAR_SERVICE_ACCOUNT_B64
+```
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `CALENDAR_SERVICE_ACCOUNT_JSON` | Full content of the service account JSON key | *(required)* |
+| `CALENDAR_SERVICE_ACCOUNT_JSON` | Service account JSON key (raw) | *(optional)* |
+| `CALENDAR_SERVICE_ACCOUNT_B64` | Base64-encoded JSON key (alternative) | *(optional)* |
 | `CALENDAR_ID` | Calendar ID (use your email for your main calendar) | `primary` |
 | `CALENDAR_MAX_RESULTS` | Max events per list/search | `20` |
 | `CALENDAR_TIMEZONE` | Timezone for events | *(system timezone)* |
@@ -92,16 +99,16 @@ This creates `dist/oido-google-calendar.zip` for upload via the Plugins UI.
 
 ## Tools
 
-### `list_events`
+### `g_calendar_list_events`
 List upcoming events from the calendar. Optionally filter by `max_results` and `time_min`.
 
-### `get_event`
+### `g_calendar_get_event`
 Get full event details by event ID.
 
-### `create_event`
+### `g_calendar_create_event`
 Create a new event. Requires `summary`, `start_time`, and `end_time` (RFC3339 format).
 
-### `search_events`
+### `g_calendar_search_events`
 Search events by query string matching title, description, or location.
 
 ## Architecture
