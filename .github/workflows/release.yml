@@ -52,7 +52,7 @@ jobs:
           GOARCH: ${{ matrix.arch }}
         run: |
           mkdir -p dist/commands dist/skills/oido-google-calendar
-          cp oido-extension.json OIDO.md README.md dist/ 2>/dev/null || true
+          cp plugin.json oido-extension.json OIDO.md README.md dist/ 2>/dev/null || true
           cp oido-google-calendar-mcp dist/
           cp commands/* dist/commands/ 2>/dev/null || true
           cp skills/oido-google-calendar/* dist/skills/oido-google-calendar/ 2>/dev/null || true

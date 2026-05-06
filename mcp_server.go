@@ -41,7 +41,8 @@ type SearchEventsArgs struct {
 func RunMCPServer() {
 	calClient, err := NewCalendarClient()
 	if err != nil {
-		log.Fatalf("Failed to create Calendar client: %v", err)
+		log.Printf("Warning: Calendar client init failed (tools will return errors): %v", err)
+		calClient = &CalendarClient{settings: DefaultCalendarSettings()}
 	}
 
 	handler := NewMCPHandler(calClient)

@@ -4,7 +4,9 @@ import (
 	"context"
 	"encoding/base64"
 	"fmt"
+	"log"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -48,7 +50,37 @@ func DefaultCalendarSettings() *CalendarSettings {
 	}
 }
 
+func loadDotEnv() {
+	exe, err := os.Executable()
+	if err != nil {
+		return
+	}
+	envPath := filepath.Join(filepath.Dir(exe), ".env")
+	data, err := os.ReadFile(envPath)
+	if err != nil {
+		return
+	}
+	lines := strings.Split(string(data), "\n")
+	for _, line := range lines {
+		line = strings.TrimSpace(line)
+		if line == "" || strings.HasPrefix(line, "#") {
+			continue
+		}
+		parts := strings.SplitN(line, "=", 2)
+		if len(parts) != 2 {
+			continue
+		}
+		key := strings.TrimSpace(parts[0])
+		val := strings.TrimSpace(parts[1])
+		if key != "" && os.Getenv(key) == "" {
+			os.Setenv(key, val)
+		}
+	}
+	log.Printf("Loaded .env from %s", envPath)
+}
+
 func parseCalendarSettings() (*CalendarSettings, error) {
+	loadDotEnv()
 	settings := DefaultCalendarSettings()
 
 	settings.ServiceAccountJSON = os.Getenv("CALENDAR_SERVICE_ACCOUNT_JSON")
@@ -79,7 +111,7 @@ func parseCalendarSettings() (*CalendarSettings, error) {
 	}
 
 	if settings.ServiceAccountJSON == "" {
-		return nil, fmt.Errorf("missing required env var: set CALENDAR_SERVICE_ACCOUNT_JSON (raw JSON) or CALENDAR_SERVICE_ACCOUNT_B64 (base64-encoded JSON)")
+		log.Println("Warning: CALENDAR_SERVICE_ACCOUNT_JSON (or _B64) not set. Tools will return errors until configured.")
 	}
 
 	return settings, nil
@@ -98,6 +130,10 @@ func NewCalendarClient() (*CalendarClient, error) {
 }
 
 func (c *CalendarClient) getService(ctx context.Context) (*calendar.Service, error) {
+	if c.settings.ServiceAccountJSON == "" {
+		return nil, fmt.Errorf("Google Calendar not configured: set CALENDAR_SERVICE_ACCOUNT_JSON or CALENDAR_SERVICE_ACCOUNT_B64")
+	}
+
 	input := strings.TrimSpace(c.settings.ServiceAccountJSON)
 	raw := []byte(input)
 
